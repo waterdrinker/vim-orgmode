@@ -304,23 +304,4 @@ class Navigator(object):
 		self.keybindings.append(Keybinding(u'{', Plug(u'OrgJumpToPreviousOperator', u':<C-u>%s ORGMODE.plugins[u"Navigator"].previous(mode=u"operator")<CR>' % VIM_PY_CALL, mode=MODE_OPERATOR)))
 		self.keybindings.append(Keybinding(u'}', Plug(u'OrgJumpToNextOperator', u':<C-u>%s ORGMODE.plugins[u"Navigator"].next(mode=u"operator")<CR>' % VIM_PY_CALL, mode=MODE_OPERATOR)))
 
-		# section wise movement (skip children)
-		# normal mode
-		self.keybindings.append(Keybinding(u'[[',
-									 Plug(u'OrgJumpToPreviousSkipChildrenNormal',
-			   u'%s ORGMODE.plugins[u"Navigator"].previous(mode=u"normal", skip_children=True)<CR>' % VIM_PY_CALL)))
-		self.menu + ActionEntry(u'Ne&xt Same Level', self.keybindings[-1])
-		self.keybindings.append(Keybinding(u']]',
-									 Plug(u'OrgJumpToNextSkipChildrenNormal',
-			   u'%s ORGMODE.plugins[u"Navigator"].next(mode=u"normal", skip_children=True)<CR>' % VIM_PY_CALL)))
-		self.menu + ActionEntry(u'Pre&vious Same Level', self.keybindings[-1])
-
-		# visual mode
-		self.keybindings.append(Keybinding(u'[[', Plug(u'OrgJumpToPreviousSkipChildrenVisual', u'<Esc>:<C-u>%s ORGMODE.plugins[u"Navigator"].previous(mode=u"visual", skip_children=True)<CR>' % VIM_PY_CALL, mode=MODE_VISUAL)))
-		self.keybindings.append(Keybinding(u']]', Plug(u'OrgJumpToNextSkipChildrenVisual', u'<Esc>:<C-u>%s ORGMODE.plugins[u"Navigator"].next(mode=u"visual", skip_children=True)<CR>' % VIM_PY_CALL, mode=MODE_VISUAL)))
-
-		# operator-pending mode
-		self.keybindings.append(Keybinding(u'[[', Plug(u'OrgJumpToPreviousSkipChildrenOperator', u':<C-u>%s ORGMODE.plugins[u"Navigator"].previous(mode=u"operator", skip_children=True)<CR>' % VIM_PY_CALL, mode=MODE_OPERATOR)))
-		self.keybindings.append(Keybinding(u']]', Plug(u'OrgJumpToNextSkipChildrenOperator', u':<C-u>%s ORGMODE.plugins[u"Navigator"].next(mode=u"operator", skip_children=True)<CR>' % VIM_PY_CALL, mode=MODE_OPERATOR)))
-
 # vim: set noexpandtab:

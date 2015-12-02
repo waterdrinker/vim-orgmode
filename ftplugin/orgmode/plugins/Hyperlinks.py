@@ -28,6 +28,8 @@ class Hyperlinks(object):
 		# commands for this plugin
 		self.commands = []
 
+		self.prelink = {}
+
 	uri_match = re.compile(
 		r'^\[{2}(?P<uri>[^][]*)(\]\[(?P<description>[^][]*))?\]{2}')
 
@@ -69,8 +71,24 @@ class Hyperlinks(object):
 			res[u'uri'] = res[u'uri'].replace(u'\\\\', u'\\')
 			return res
 
-	@classmethod
-	def follow(cls, action=u'openLink', visual=u''):
+	@staticmethod
+	def _process_link(link=None):
+		if not link:
+			cursor = vim.current.window.cursor
+			line = u_decode(vim.current.buffer[cursor[0] - 1])
+			if not line:
+				return
+			vim.command(u"s/^/[[")
+			vim.command(u"s/$/]]")
+			vim.command(u"noh")
+			vim.command(u"w")
+			return
+
+		if link[u'uri'][-4:] != '.org':
+			link[u'uri'] += '.org'
+		return link
+
+	def follow(self, action=u'openLink', visual=u''):
 		u""" Follow hyperlink. If called on a regular string UTL determines the
 		outcome. Normally a file with that name will be opened.
 
@@ -81,9 +99,9 @@ class Hyperlinks(object):
 
 		:returns: URI or None
 		"""
-		if not int(vim.eval(u'exists(":Utl")')):
-			echom(u'Universal Text Linking plugin not installed, unable to proceed.')
-			return
+		#if not int(vim.eval(u'exists(":Utl")')):
+		#	echom(u'Universal Text Linking plugin not installed, unable to proceed.')
+		#	return
 
 		action = u'copyLink' \
 			if (action and action.startswith(u'copy')) \
@@ -92,13 +110,32 @@ class Hyperlinks(object):
 
 		link = Hyperlinks._get_link()
 
+		Hyperlinks._process_link(link)
+
 		if link and link[u'uri'] is not None:
 			# call UTL with the URI
-			vim.command(u_encode(u'Utl %s %s %s' % (action, visual, link[u'uri'])))
+			#vim.command(u_encode(u'Utl %s %s %s' % (action, visual, link[u'uri'])))
+			n = vim.current.buffer.number
+			try:
+				vim.command(u"update")
+				vim.command(u_encode((u'e %s' % link[u'uri'])))
+			except vim.error:
+				print("Encountering a vim.error, please check!")
+			self.prelink[vim.current.buffer.number]=n
 			return link[u'uri']
 		else:
+			return
 			# call UTL and let it decide what to do
 			vim.command(u_encode(u'Utl %s %s' % (action, visual)))
+
+	def backward(self):
+		p = self.prelink.get(vim.current.buffer.number)
+		if p:
+			try:
+				vim.command(u"update")
+				vim.current.buffer = vim.buffers[p]
+			except vim.error:
+				print("Encountering a vim.error, please check!")
 
 	@classmethod
 	@realign_tags
@@ -166,8 +203,18 @@ class Hyperlinks(object):
 			u'%s ORGMODE.plugins[u"Hyperlinks"].follow()' % VIM_PY_CALL)
 		self.commands.append(cmd)
 		self.keybindings.append(
-			Keybinding(u'gl', Plug(u'OrgHyperlinkFollow', self.commands[-1])))
+			Keybinding(u'<CR>', Plug(u'OrgHyperlinkFollow', self.commands[-1])))
 		self.menu + ActionEntry(u'&Follow Link', self.keybindings[-1])
+
+		# backspace
+		cmd = Command(
+			u'OrgHyperlinkBackward',
+			u'%s ORGMODE.plugins[u"Hyperlinks"].backward()' % VIM_PY_CALL)
+		self.commands.append(cmd)
+		self.keybindings.append(
+			Keybinding(u'<BACKSPACE>', Plug(u'OrgHyperlinkBackward', self.commands[-1])))
+		self.menu + ActionEntry(u'&Backward Link', self.keybindings[-1])
+		#
 
 		cmd = Command(
 			u'OrgHyperlinkCopy',

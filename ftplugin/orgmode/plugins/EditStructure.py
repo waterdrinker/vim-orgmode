@@ -369,7 +369,7 @@ class EditStructure(object):
 		self.keybindings.append(Keybinding(u'<C-CR>', Plug(u'OrgNewHeadingBelowAfterChildrenNormal', u':silent! %s ORGMODE.plugins[u"EditStructure"].new_heading(below=True, end_of_last_child=True)<CR>' % VIM_PY_CALL)))
 		self.menu + ActionEntry(u'New Heading below, after &children', self.keybindings[-1])
 		self.keybindings.append(Keybinding(u'<localleader>hn', u'<Plug>OrgNewHeadingBelowAfterChildrenNormal', mode=MODE_NORMAL))
-		self.keybindings.append(Keybinding(u'<CR>', u'<Plug>OrgNewHeadingBelowAfterChildrenNormal', mode=MODE_NORMAL))
+		self.keybindings.append(Keybinding(u'<SPACE>', u'<Plug>OrgNewHeadingBelowAfterChildrenNormal', mode=MODE_NORMAL))
 
 		self.keybindings.append(Keybinding(u'<C-S-CR>', Plug(u'OrgNewHeadingAboveInsert', u'<C-o>:<C-u>silent! %s ORGMODE.plugins[u"EditStructure"].new_heading(below=False, insert_mode=True)<CR>' % VIM_PY_CALL, mode=MODE_INSERT)))
 		self.keybindings.append(Keybinding(u'<S-CR>', Plug(u'OrgNewHeadingBelowInsert', u'<C-o>:<C-u>silent! %s ORGMODE.plugins[u"EditStructure"].new_heading(below=True, insert_mode=True)<CR>' % VIM_PY_CALL, mode=MODE_INSERT)))
@@ -409,7 +409,7 @@ class EditStructure(object):
 
 		self.keybindings.append(Keybinding(u'<ar', Plug(u'OrgPromoteSubtreeNormal', u':silent! %s ORGMODE.plugins[u"EditStructure"].promote_heading()<CR>' % VIM_PY_CALL)))
 		self.menu + ActionEntry(u'&Promote Subtree', self.keybindings[-1])
-		self.keybindings.append(Keybinding(u'<[[', u'<Plug>OrgPromoteSubtreeNormal', mode=MODE_NORMAL))
+		self.keybindings.append(Keybinding(u'[[', u'<Plug>OrgPromoteSubtreeNormal', mode=MODE_NORMAL))
 		self.keybindings.append(Keybinding(u'<ir', u'<Plug>OrgPromoteSubtreeNormal', mode=MODE_NORMAL))
 
 		self.keybindings.append(Keybinding(u'>ah', Plug(u'OrgDemoteHeadingNormal', u':silent! %s ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=False)<CR>' % VIM_PY_CALL)))
@@ -420,7 +420,7 @@ class EditStructure(object):
 
 		self.keybindings.append(Keybinding(u'>ar', Plug(u'OrgDemoteSubtreeNormal', u':silent! %s ORGMODE.plugins[u"EditStructure"].demote_heading()<CR>' % VIM_PY_CALL)))
 		self.menu + ActionEntry(u'&Demote Subtree', self.keybindings[-1])
-		self.keybindings.append(Keybinding(u'>]]', u'<Plug>OrgDemoteSubtreeNormal', mode=MODE_NORMAL))
+		self.keybindings.append(Keybinding(u']]', u'<Plug>OrgDemoteSubtreeNormal', mode=MODE_NORMAL))
 		self.keybindings.append(Keybinding(u'>ir', u'<Plug>OrgDemoteSubtreeNormal', mode=MODE_NORMAL))
 
 		# other keybindings
